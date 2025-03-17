@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  frontend:
+    build: ./frontend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules  # Aby nie nadpisywać node_modules z hosta
+    environment:
+      - CHOKIDAR_USEPOLLING=true  # Opcjonalnie: poprawia hot-reloading

@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  backend:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - MONGO_URI=mongodb://mongodb:27017/IBM
+      - MQTT_URL=mqtt://mqtt:1883
+      - RABBITMQ_URI=amqp://rabbitmq
+    depends_on:
+      - mongodb
+      - mqtt
+      - rabbitmq
+
+  mongodb:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+
+  mqtt:
+    image: eclipse-mosquitto:latest
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    volumes:
+      - mosquitto_data:/mosquitto/data
+      - mosquitto_config:/mosquitto/config
+      - mosquitto_log:/mosquitto/log
+
+  rabbitmq:
+    image: rabbitmq:management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+  
+  frontend:
+    build: ../frontend
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_URL=http://backend:3000  # Ustawienie URL do backendu
+    depends_on:
+      - backend
+
+volumes:
+  mongodb_data:
+  mosquitto_data:
+  mosquitto_config:
+  mosquitto_log:
