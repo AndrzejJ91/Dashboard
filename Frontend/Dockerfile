@@ -1,21 +1,21 @@
-# Używamy oficjalnego obrazu Node.js
+# Using the official Node.js image
 FROM node:22.11.0
 
-# Ustawienie katalogu roboczego
+# Setting the working directory
 WORKDIR /app
 
-# Kopiowanie plików package.json i package-lock.json
+# Copying package.json and package-lock.json files
 COPY package*.json ./
 
-# Instalacja zależności
+# Installing dependencies
 RUN npm install
 
-# Kopiowanie reszty plików
+# Copying the rest of the files
 COPY . .
 
-# Exponowanie portu aplikacji
+# Exposing the application port
 EXPOSE 5173
 
-# Uruchamianie aplikacji w trybie deweloperskim
+# Running the application in development mode
 CMD ["npm", "run", "dev", "--", "--host"]
 

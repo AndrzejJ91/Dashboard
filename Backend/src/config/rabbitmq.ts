@@ -6,29 +6,29 @@ dotenv.config();
 
 const RABBITMQ_URI = process.env.RABBITMQ_URI || 'amqp://localhost';
 
-// 🔥 Kolejki, których używamy
-const queueNames = ['Nowe_Maszyny', 'Status_Maszyny', 'Popsute_Maszyny'];
+// 🔥 Queues we use
+const queueNames = ['New_Machines', 'Machine_Status', 'Broken_Machines'];
 
 export const connectRabbitMQ = async () => {
     try {
         const connection = await amqplib.connect(RABBITMQ_URI);
-        console.log('✅ Połączono z RabbitMQ');
+        console.log('✅ Connected to RabbitMQ');
         const channel = await connection.createChannel();
 
-        // 🔥 Tworzymy WSZYSTKIE kolejki
+        // 🔥 Create ALL queues
         for (const queue of queueNames) {
             await channel.assertQueue(queue, { durable: true });
-            console.log(`📌 Kolejka utworzona: ${queue}`);
+            console.log(`📌 Queue created: ${queue}`);
         }
 
         return { connection, channel };
     } catch (error) {
-        console.error('❌ Błąd połączenia z RabbitMQ:', error);
+        console.error('❌Error connecting to RabbitMQ:', error);
         throw error;
     }
 };
 
-// 🔥 Konsumowanie wiadomości z WSZYSTKICH kolejek
+// 🔥 Consuming messages from ALL queues
 export const consumeAndSaveRabbitMessages = async () => {
     try {
         const { channel } = await connectRabbitMQ();
@@ -37,49 +37,49 @@ export const consumeAndSaveRabbitMessages = async () => {
             channel.consume(queue, async (msg) => {
                 if (msg !== null) {
                     const content = msg.content.toString();
-                    console.log(`📥 Odebrano z ${queue}: ${content}`);
+                    console.log(`📥 Received from ${queue}: ${content}`);
 
                     if (content.trim() === '') {
-                        console.warn("⚠️ Pusta wiadomość – pomijam");
+                        console.warn("⚠️ Empty message – skipping");
                         channel.ack(msg);
                         return;
                     }
 
                     try {
-                        // Zapis do MongoDB
+                        // Saving to MongoDB
                         const newMessage = new RabbitMQSchema({
-                            title: "Nowa wiadomość",
+                            title: "New message",
                             topic: queue,  
                             message: content,
                             queueName: queue,  
                         });
                         await newMessage.save();
-                        console.log(`✅ Wiadomość zapisana w MongoDB z ${queue}`);
+                        console.log(`✅ Message saved in MongoDB with ${queue}`);
                         channel.ack(msg);
                     } catch (error) {
-                        console.error("❌ Błąd zapisu wiadomości:", error);
+                        console.error("❌ Error saving message:", error);
                     }
                 }
             });
         }
     } catch (error) {
-        console.error("❌ Błąd podczas konsumowania wiadomości:", error);
+        console.error("❌ Error while consuming message:", error);
     }
 };
 
-// 🔥 Wysyłanie wiadomości do konkretnej kolejki
+// 🔥 Sending message to a specific queue
 export const publishMessage = async (queueName: string, message: string) => {
     try {
         const { channel } = await connectRabbitMQ();
 
         if (!queueNames.includes(queueName)) {
-            console.error(`❌ Błąd: Nieznana kolejka ${queueName}`);
+            console.error(`❌ Error: Unknown queue ${queueName}`);
             return;
         }
 
         channel.sendToQueue(queueName, Buffer.from(message), { persistent: true });
-        console.log(`📤 Wysłano do ${queueName}: ${message}`);
+        console.log(`📤 Sent to ${queueName}: ${message}`);
     } catch (error) {
-        console.error('❌ Błąd wysyłania wiadomości:', error);
+        console.error('❌ Error sending message:', error);
     }
 };

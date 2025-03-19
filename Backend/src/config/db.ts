@@ -7,25 +7,25 @@ const mongoUri = process.env.MONGO_URI || 'mongodb://localhost:27017/IBM';
 
 
 const connectDB = async () => {
-    // Jeśli istnieje aktywne połączenie, rozłączamy się
+    // If there is an active connection, disconnect
     if (mongoose.connection.readyState !== 0) {
       await mongoose.disconnect();
     }
   
     try {
       await mongoose.connect(process.env.MONGO_URI as string, {
-        connectTimeoutMS: 1000,          // Ustawia czas oczekiwania na połączenie na 1 sekundę
-        serverSelectionTimeoutMS: 1000,  // Ustawia czas oczekiwania na wybór serwera na 1 sekundę
+        connectTimeoutMS: 1000,          // Connection timeout set to 1 second
+        serverSelectionTimeoutMS: 1000,  // Server selection timeout set to 1 second
       });
-      console.log("✅ Połączono z MongoDB!");
+      console.log("✅ Connected to MongoDB!");
 
 
     } catch (error) {
-        console.error({ success: false, message: "Błąd połączenia z bazą danych", error });
+        console.error({ success: false, message: "Error connecting to the database", error });
 
-        // W testach rzucamy błąd, ale w normalnym środowisku wyłączamy aplikację
+        // In tests, throw an error, but in a normal environment, shut down the application
         if (process.env.NODE_ENV === "test") {
-            throw new Error("Błąd połączenia z MongoDB");
+            throw new Error("Error connecting to MongoDB");
         } else {
             process.exit(1);
         }

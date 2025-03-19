@@ -19,14 +19,14 @@ router.get('/', authMiddleware, async (req: Request, res: Response) => {
        
        
            }catch(error){
-               console.error("Błąd podczas pobierania wiadomości:", error);
-               res.status(500).json({message: "Błąd podczas pobierania wiadomości"});
+               console.error("Error while fetching messages:", error);
+               res.status(500).json({message: "Error while fetching messages"});
            };
 
 });
 
 
-// Endpoint oznaczający wiadomość jako przeczytaną
+// Endpoint marking a message as read
 
 
 router.patch('/:id/read',  async (req: Request, res: Response) => {
@@ -40,8 +40,8 @@ router.patch('/:id/read',  async (req: Request, res: Response) => {
             res.json(updatedMessage);
     
         }catch(error){
-            console.error("Błąd podczas oznaczania wiadomości jako przeczytanej:", error);
-            res.status(500).json({message: "Błąd podczas oznaczania wiadomości jako przeczytanej"});
+            console.error("Error while marking the message as read:", error);
+            res.status(500).json({message: "Error while marking the message as read"});
     
       };
 

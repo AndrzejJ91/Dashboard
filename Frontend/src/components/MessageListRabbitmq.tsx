@@ -24,7 +24,7 @@ const MessageListRabbitmq: React.FC = () => {
       try {
         const token = localStorage.getItem('token');
 
-        // 🔥 Pobieramy tylko wiadomości z wybranej kolejki
+       // 🔥 Retrieve only messages from the selected queue
         const response = await axios.get(
           selectedQueue === "all"
             ? 'http://localhost:3000/api/rabbit-messages'
@@ -34,7 +34,7 @@ const MessageListRabbitmq: React.FC = () => {
           }
         );
 
-        // Transformacja: konwersja dat na obiekty Date
+        // Transformation: convert dates to Date objects
         const transformed = response.data.map((msg: any) => ({
           ...msg,
           scheduledAt: msg.scheduledAt ? new Date(msg.scheduledAt) : undefined,
@@ -43,32 +43,32 @@ const MessageListRabbitmq: React.FC = () => {
 
         setRabbitMessages(transformed);
       } catch (error) {
-        console.error('Błąd podczas pobierania wiadomości:', error);
+        console.error('Error while fetching messages:', error);
       }
     };
 
     fetchMessages();
-  }, [selectedQueue]); // 🔥 Za każdym razem, gdy zmienia się `selectedQueue`, pobieramy nowe dane
+  }, [selectedQueue]);
 
   return (
     <div className="bg-gray-200 p-6 rounded-lg shadow-xl h-full overflow-y-auto">
       <h2 className="text-xl font-bold text-gray-900 my-5 text-center">📦 RabbitMQ Messages</h2>
 
-      {/* 🔽 Filtr kolejki */}
+      {/* 🔽 Queue filter */}
       <select
         className="w-full bg-gray-300 p-2 rounded-md mb-4"
         value={selectedQueue}
         onChange={(e) => setSelectedQueue(e.target.value)}
       >
-        <option value="all">Wszystkie kolejki</option>
-        <option value="Status_Maszyny">Status Maszyny</option>
-        <option value="Popsute_Maszyny">Popsute Maszyny</option>
-        <option value="Nowe_Maszyny">Nowe Maszyny</option> 
+        <option value="all">All Queues</option>
+        <option value="Machine_Status">Machine Status</option>
+        <option value="Broken_Machines">Broken Machines</option>
+        <option value="New_Machines">New Machines</option> 
       </select>
 
-      {/* 📩 Lista wiadomości */}
+      {/* 📩 Message list */}
       {rabbitMessages.length === 0 ? (
-        <p className="text-gray-600 text-center">🚫 Brak wiadomości w tej kolejce</p>
+        <p className="text-gray-600 text-center">🚫 No messages in this queue</p>
       ) : (
         <ul className="w-full space-y-4">
           {rabbitMessages.map((msg) => (

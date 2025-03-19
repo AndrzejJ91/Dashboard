@@ -7,6 +7,6 @@ services:
       - "5173:5173"
     volumes:
       - ./frontend:/app
-      - /app/node_modules  # Aby nie nadpisywać node_modules z hosta
+      - /app/node_modules  # To avoid overwriting node_modules from the host
     environment:
-      - CHOKIDAR_USEPOLLING=true  # Opcjonalnie: poprawia hot-reloading
+      - CHOKIDAR_USEPOLLING=true  # Optionally: improves hot-reloading

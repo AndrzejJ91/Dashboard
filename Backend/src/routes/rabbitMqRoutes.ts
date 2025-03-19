@@ -4,21 +4,21 @@ import authMiddleware from "../middleware/auth";
 
 const router = Router();
 
-// Endpoint GET - pobiera wiadomości RabbitMQ według `queueName`
+// GET Endpoint - retrieves RabbitMQ messages by `queueName`
 router.get('/', authMiddleware, async (req: Request, res: Response) => {
     try {
-        const { queueName } = req.query; // Pobieramy filtr z query params
+        const { queueName } = req.query; // Retrieve filter from query parameters
         let query: any = {};
 
         if (queueName && queueName !== 'all') {
-            query.queueName = queueName;  // 🔥 Filtrowanie po nazwie kolejki
+            query.queueName = queueName; // 🔥 Filtering by queue name
         }
 
         const messages = await rabbitMQModles.find(query).sort({ createdAt: -1 });
         res.json(messages);
     } catch (error) {
-        console.error("❌ Błąd pobierania wiadomości RabbitMQ:", error);
-        res.status(500).json({ error: "Błąd serwera" });
+        console.error("❌ Error while fetching RabbitMQ messages:", error);
+        res.status(500).json({ error: "Server error" });
     }
 });
 

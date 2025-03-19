@@ -9,8 +9,8 @@ dotenv.config();
 const MQTT_URL = process.env.MQTT_URL || (process.env.DOCKER_ENV ? 'mqtt://mqtt:1883' : 'mqtt://localhost:1883');
 
 
-// Lista tematów do subskrypcji
-const topics = ['Status_Maszyny', 'Nowe_Maszyny', 'Błędy_Maszyn'];
+// List of topics to subscribe to
+const topics = ['Machine_Status', 'New_Machines', 'Machine_Errors'];
 
 
 export const mqttClient = mqtt.connect(MQTT_URL);
@@ -19,15 +19,15 @@ export const mqttClient = mqtt.connect(MQTT_URL);
 
 mqttClient.on('connect', () => {
     
-    console.log("Połączono z brokerem MQTT");
+    console.log("Connected to MQTT broker");
 
     
 
     mqttClient.subscribe(topics, {qos: 1}, (error) => {
         if (error) {
-            console.error("Błąd subskrypcji:", error);
+            console.error("Subscription error:", error);
         }else {
-            console.log(`✅ Zasubskrybowano temat: ${topics}`);
+            console.log(`✅ Subscribed to topic: ${topics}`);
         }
     });
 });
@@ -37,21 +37,21 @@ mqttClient.on('message', async (topic, message) => {
       try {
         const messageStr = await message.toString();
         
-        console.log(`📩 Otrzymano wiadomość z tematu "${topic}": ${messageStr}`);
+        console.log(`📩 Received message from topic"${topic}": ${messageStr}`);
 
                 
-        // Zapisujemy wiadomość w bazie dokładnie z takim tematem, jakim przyszła
+        // Save the message in the database with the exact topic it was received from
         const newMessage = await new Mqtt({ topic, category: topic, message: messageStr })
         const saveDoc = await newMessage.save();
-        console.log(`📥 MQTT: Zapisano wiadomość" z tematu "${topic}"`, saveDoc);
+        console.log(`📥 MQTT: Message saved from topic "${topic}"`, saveDoc);
         
 
     } catch (error) {
-        console.error("Błąd zapisu wiadomości:", error);
+        console.error("Error saving message:", error);
     };
 });
 
 
 mqttClient.on('error', (error) => {
-    console.error("Błąd połączenia z brokerem MQTT:", error);
+    console.error("Error connecting to MQTT broker:", error);
 });

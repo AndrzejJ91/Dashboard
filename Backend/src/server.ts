@@ -12,7 +12,7 @@ import "./config/mqtt";
 import "./websocket";
 
 
-dotenv.config(); // Ładowanie zmiennych z .env
+dotenv.config(); // Loading variables from .env
 
 const app = express();
 const PORT = process.env.PORT || 3000; 
@@ -37,22 +37,22 @@ app.use('/api/rabbit-messages',authMiddleware, rabbitMqRoutes);
 
 
 
-// Funkcja startująca serwer
+// Function to start the server
 const startServer = async () => {
     try {
-        await connectDB(); // Połączenie z bazą danych
-        console.log("✅ Połączono z bazą MongoDB");
+        await connectDB(); // Database connection
+        console.log("✅ Connected to MongoDB database");
             
         
-        // Uruchamiamy konsumpcję wiadomości RabbitMQ
-        consumeAndSaveRabbitMessages().catch(err => console.error("Błąd RabbitMQ:", err));
+        // Start consuming RabbitMQ messages
+        consumeAndSaveRabbitMessages().catch(err => console.error("RabbitMQ error:", err));
 
         app.listen(PORT, () => {
-            console.log(`✅ Serwer działa na porcie: ${PORT}`);
+            console.log(`✅ Server is running on port: ${PORT}`);
         });
     } catch (error) {
-        console.error("❌ Błąd podczas uruchamiania serwera:", error);
-        process.exit(1); // Zatrzymanie aplikacji w razie błędu
+        console.error("❌ Error while starting the server:", error);
+        process.exit(1); // Stop the application in case of an error
     }
 };
 

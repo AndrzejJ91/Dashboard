@@ -12,7 +12,7 @@ interface Message {
 }
 
 const MessageItemRabbitmq: React.FC<{ message: Message }> = ({ message }) => {
-  // Kolor statusu
+  // Status color
   const getStatusStyle = (status: string) => {
     switch (status.toLowerCase()) {
       case 'processed':
@@ -28,25 +28,25 @@ const MessageItemRabbitmq: React.FC<{ message: Message }> = ({ message }) => {
 
   return (
     <li className="bg-white border border-gray-300 p-5 rounded-lg shadow-xl mb-4">
-      {/* Nagłówek */}
+      {/* Header */}
       <div className="flex justify-between items-center mb-3">
-        <h3 className="text-lg font-semibold text-gray-900">📦 Kolejka: {message.queueName}</h3>
+        <h3 className="text-lg font-semibold text-gray-900">📦 Queue: {message.queueName}</h3>
         <span className={`text-sm px-2 py-1 rounded-md ${getStatusStyle(message.status)}`}>
           {message.status}
         </span>
       </div>
 
-      {/* Treść wiadomości */}
+      {/* Message content */}
       <p className="text-gray-700 leading-relaxed border-l-4 border-blue-500 pl-3 italic">
         „{message.message}”
       </p>
 
-      {/* Szczegóły */}
+      {/* Details */}
       <div className="grid grid-cols-2 gap-2 mt-4 text-sm text-gray-600">
-        <p>📌 <strong>Temat:</strong> {message.topic}</p>
-        <p>🔄 <strong>Próby:</strong> {message.attempts}</p>
-        <p>⏳ <strong>Zaplanowana:</strong> {message.scheduledAt ? message.scheduledAt.toLocaleString() : "Brak"}</p>
-        <p>📅 <strong>Utworzona:</strong> {message.createdAt.toLocaleString()}</p>
+        <p>📌 <strong>Topic:</strong> {message.topic}</p>
+        <p>🔄 <strong>Attempts:</strong> {message.attempts}</p>
+        <p>⏳ <strong>Scheduled:</strong> {message.scheduledAt ? message.scheduledAt.toLocaleString() : "Brak"}</p>
+        <p>📅 <strong>Created:</strong> {message.createdAt.toLocaleString()}</p>
       </div>
     </li>
   );

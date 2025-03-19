@@ -8,12 +8,12 @@ const LogIn = () => {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [rememberMe, setRememberMe] = useState(false)
-  const navigate = useNavigate(); // ✅ Dodajemy nawigację
+  const navigate = useNavigate();
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(null);
-    setLoading(true); // ✅ Ustawiamy wskaźnik ładowania
+    setLoading(true); // ✅ Set loading indicator
 
     try {
       
@@ -21,9 +21,9 @@ const LogIn = () => {
 
       if (response.status === 200) {
         localStorage.setItem("token", response.data.token);
-        navigate("/Dashboard"); // ✅ Przekierowanie po zalogowaniu
+        navigate("/Dashboard"); 
       } else {
-        setError(response.data.message || "Logowanie nie powiodło się.");
+        setError(response.data.message || "Login failed.");
       }
 
       if (rememberMe) {
@@ -33,9 +33,9 @@ const LogIn = () => {
       }
 
     } catch (error: any) {
-      setError(error.response?.data?.message || "Błąd logowania.");
+      setError(error.response?.data?.message || "Login error.");
     } finally {
-      setLoading(false); // ✅ Zatrzymujemy wskaźnik ładowania
+      setLoading(false); // ✅ Stop loading indicator
     }
   };
 
@@ -82,7 +82,7 @@ const LogIn = () => {
             onChange={() => setRememberMe(!rememberMe)}
             className="mr-2 w-4 h-4 accent-blue-500"
           />
-          Zapamiętaj mnie
+          Remember Me
         </div>
       </div>
   

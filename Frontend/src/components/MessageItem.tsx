@@ -33,7 +33,7 @@ const MessageItem: React.FC<MessageItemProps> = ({ message, onMarkAsRead }) => {
 
   return (
     <li key={message._id} className="bg-white border border-gray-300 p-5 rounded-lg shadow-xl mb-4">
-      {/* Nagłówek */}
+      {/* Header */}
       <div className="flex justify-between items-center mb-3">
         <h3 className="text-lg font-semibold text-gray-900">📩 {message.topic || "Wiadomość"}</h3>
         <span className={`text-sm px-2 py-1 rounded-md ${getStatusStyle(message.status)}`}>
@@ -41,34 +41,34 @@ const MessageItem: React.FC<MessageItemProps> = ({ message, onMarkAsRead }) => {
         </span>
       </div>
 
-      {/* Treść wiadomości */}
+      {/* Message content */}
       <p className="text-gray-700 leading-relaxed border-l-4 border-blue-500 pl-3 italic">
         „{message.message}”
       </p>
 
-      {/* Szczegóły */}
+      {/* Details */}
       <div className="grid grid-cols-2 gap-2 mt-4 text-sm text-gray-600">
-        <p>📅 <strong>Data:</strong> {message.date.toLocaleString()}</p>
+        <p>📅 <strong>Date:</strong> {message.date.toLocaleString()}</p>
         <p>🆔 <strong>ID:</strong> {message._id}</p>
-        <p>📨 <strong>Nadawca:</strong> {message.sender}</p>
+        <p>📨 <strong>Sender:</strong> {message.sender}</p>
         <p>📊 <strong>QoS:</strong> {message.qos}</p>
       </div>
 
-      {/* Status odczytu */}
+      {/* Read status */}
       <p className="mt-3 text-sm">
-        ✅ <strong>Odczytana:</strong> 
+        ✅ <strong>Read:</strong> 
         <span className={message.isRead ? "text-green-500" : "text-red-500 ml-1"}>
-          {message.isRead ? "Tak" : "Nie"}
+          {message.isRead ? "Yes" : "No"}
         </span>
       </p>
 
-      {/* Przycisk "Oznacz jako przeczytane" */}
+      {/* button "Mark as read" */}
       {!message.isRead && (
         <button
           className="mt-4 bg-blue-500 hover:bg-blue-600 text-white text-sm px-5 py-2 cursor-pointer rounded-lg transition-all duration-300 shadow-md"
           onClick={() => onMarkAsRead(message._id)}
         >
-          ✅ Oznacz jako przeczytane
+          ✅ Mark as read
         </button>
       )}
     </li>

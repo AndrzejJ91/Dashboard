@@ -1,26 +1,27 @@
-# Używamy oficjalnego obrazu node.js
+# Using the official Node.js image
 FROM node:22.11.0
 
-# Ustawiamy katalog roboczy w kontenerze
+# Set the working directory in the container
 WORKDIR /app
 
-# Kopiujemy pliki package.json i package-lock.json do katalogu roboczego
+# Copy package.json and package-lock.json to the working directory
+
 COPY package*.json ./
 
-# Instalujemy zależności
+# Install dependencies
 RUN npm install
 
-# Kopiujemy cały projekt do katalogu roboczego
+# Copy the entire project to the working directory
 COPY . .
 
-# Ustawianie zmiennych środowiskowych dla Dockera
+# Setting environment variables for Docker
 ENV PORT=3000
 ENV MONGO_URL=mongodb://mongodb:27017/IBM  
 ENV MQTT_URL=mqtt://mqtt:1883  
 ENV RABBITMQ_URI=amqp://rabbitmq
 
-# Exponujemy port aplikacji
+# Expose the application port
 EXPOSE 3000
 
-# Uruchamiamy aplikację
+# Start the application
 CMD ["npm", "run", "dev"]

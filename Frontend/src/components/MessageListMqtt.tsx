@@ -30,7 +30,7 @@ const MessageList: React.FC = () => {
         const transformed: Message[] = response.data.map((msg: any) => ({
           _id: msg._id,
           category: msg.category,
-          topic: msg.topic || "Brak tytułu",
+          topic: msg.topic || "Missing title",
           message: msg.message,
           date: new Date(msg.createdAt),
           status: msg.status,
@@ -55,8 +55,8 @@ const MessageList: React.FC = () => {
 
   const markAsRead = async (id: string) => {
     const token = localStorage.getItem("token");
-    console.log("📩 Oznaczam wiadomość jako przeczytaną, ID:", id);
-    console.log("🛠️ Wysyłany token JWT:", token);
+    console.log("📩 Marking message as read, ID:", id);
+    console.log("🛠️ Sending JWT token:", token);
 
     try {
       const response = await axios.patch(
@@ -70,20 +70,20 @@ const MessageList: React.FC = () => {
         }
       );
 
-      console.log("✅ Odpowiedź z backendu:", response.data);
+      console.log("✅ Response from backend:", response.data);
       setMessages(prev =>
         prev.map((msg) =>
           msg._id === id ? { ...msg, isRead: true } : msg
         )
       );
     } catch (error) {
-      console.error("Błąd podczas oznaczania wiadomości jako przeczytanej:", error);
+      console.error("Error while marking the message as read:", error);
     }
   };
 
   return (
     <div className="bg-gray-200 p-6 rounded-lg shadow-xl h-full overflow-y-auto">
-      <h2 className="text-xl font-bold text-gray-900 my-5 text-center">📡 MQTT Wiadomości</h2>
+      <h2 className="text-xl font-bold text-gray-900 my-5 text-center">📡 MQTT Message</h2>
 
          {/* 🔽 Filtr tematu MQTT */}
 
@@ -92,19 +92,19 @@ const MessageList: React.FC = () => {
           value={selectMessage}
           onChange={(e) => setSelectMessage(e.target.value)}
         >
-        <option value="all">Wszystkie tematy</option>
-        <option value="Status_Maszyny">Status Maszyny</option>
-        <option value="Błędy_Maszyn">Błędy Maszyny</option>
-        <option value="Nowe_Maszyny">Nowe Maszyny</option>
+        <option value="all">All Topics</option>
+        <option value="Machine_Status">Machine Status</option>
+        <option value="Machine_Errors">Machine Errors</option>
+        <option value="New_Machines">New Machines</option>
         </select>
 
 
       <div className="w-full flex flex-col items-center space-y-4">
         {filteredMessage.length === 0 ? (
-          <p className="text-gray-600">Brak wiadomości</p>
+          <p className="text-gray-600">No Messages</p>
         ) : (
           <ul className="w-full">
-            {filteredMessage.map((msg) => (  // ✅ Teraz używa filtrowanej listy
+            {filteredMessage.map((msg) => (  // ✅ filtered list
               <MessageItem key={msg._id} message={msg} onMarkAsRead={markAsRead} />
   ))}
 </ul>

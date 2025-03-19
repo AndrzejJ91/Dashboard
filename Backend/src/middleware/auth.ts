@@ -13,7 +13,7 @@ interface AuthRequest extends Request {
 
 
 const SECRET_KEY = process.env.SECRET_KEY
-if (!SECRET_KEY) throw new Error("SECRET_KEY nie jest ustawiony w pliku .env");
+if (!SECRET_KEY) throw new Error("SECRET_KEY is not set in the .env file");
 
  const authMiddleware =  (req: AuthRequest, res: Response, next: NextFunction): void => {
    
@@ -22,7 +22,7 @@ if (!SECRET_KEY) throw new Error("SECRET_KEY nie jest ustawiony w pliku .env");
 
     if(!authHeader) {
 
-        res.status(401).json({error:"Brak nagłówka autoryzacji" });
+        res.status(401).json({error:"Missing authorization header" });
         return;
 
     };
@@ -30,29 +30,29 @@ if (!SECRET_KEY) throw new Error("SECRET_KEY nie jest ustawiony w pliku .env");
     const parts = authHeader.split(" ");
 
     if(parts?.length !== 2 || parts[0] !== "Bearer") {
-        res.status(401).json({ error: "Nieprawidłowy format nagłówka autoryzacji: Oczekiwano: Bearer <token>"});
+        res.status(401).json({ error: "Invalid authorization header format: Expected: Bearer <token>"});
 
     };
 
-    // ⬅️ Pobieramy istniejący token
+    // ⬅️ Retrieve existing token
     const token = parts[1];
 
     try {
          
-        // ⬅️ Weryfikujemy token
+        // ⬅️ Verify token
        const decoded = jwt.verify(token, SECRET_KEY as string);
         req.user = decoded;
         next();
 
     }catch(error: any) {
         if (error.name === "TokenExpiredError") {
-            res.status(401).json({ error: "Token wygasł" });
+            res.status(401).json({ error: "Token has expired" });
             return;
         } else if (error.name === "JsonWebTokenError") {
-            res.status(401).json({ error: "Nieprawidłowy token" });
+            res.status(401).json({ error: "Invalid token" });
             return ;
         } else {
-            res.status(500).json({ error: "Wystąpił błąd podczas weryfikacji tokena." });
+            res.status(500).json({ error: "An error occurred while verifying the token." });
             return;
         }
     }

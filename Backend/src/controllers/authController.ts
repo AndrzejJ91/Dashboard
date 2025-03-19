@@ -13,7 +13,7 @@ const seedUser = async () => {
 
   const existingUser = await User.findOne({ email });
   if (existingUser) {
-    console.log("⚠️ Użytkownik już istnieje w bazie danych.");
+    console.log("⚠️ User already exists in the database.");
     process.exit(0);
   }
 
@@ -22,11 +22,11 @@ const seedUser = async () => {
   const user = new User({ email, password: hashedPassword });
 
   await user.save();
-  console.log("✅ Użytkownik został dodany do bazy danych.");
+  console.log("✅ User has been added to the database.");
   process.exit(0);
 };
 
 seedUser().catch((error) => {
-  console.error("❌ Błąd przy dodawaniu użytkownika:", error);
+  console.error("❌ Error while adding user:", error);
   process.exit(1);
 });

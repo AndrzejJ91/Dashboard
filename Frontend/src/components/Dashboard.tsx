@@ -6,13 +6,13 @@ const Dashboard = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    localStorage.removeItem('token'); // ✅ Usuwamy token
-    navigate('/login'); // ✅ Przekierowanie na stronę logowania
+    localStorage.removeItem('token');
+    navigate('/login');
   };
 
   return (
     <div className="w-screen h-screen bg-gray-100 flex flex-col p-6 relative">
-      {/* Przycisk Log Out */}
+      {/* button Log Out */}
       <button
         onClick={handleLogout}
         className="absolute top-4 right-4 w-28 h-10 px-4 text-sm font-medium text-white 
@@ -22,19 +22,19 @@ const Dashboard = () => {
         Log Out
       </button>
 
-      {/* Tytuł Dashboard */}
+      {/* title Dashboard */}
       <h1 className="lg:text-3xl text-2xl font-bold text-gray-800 text-center mb-6">
         Dashboard
       </h1>
 
-      {/* Główna zawartość */}
+      {/* main zawartość */}
       <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-6">
-        {/* Sekcja MQTT */}
+        {/* select MQTT */}
         <div className="bg-white p-6 rounded-lg shadow-2xl h-full max-h-[80vh] overflow-y-auto">
           <MessageList />
         </div>
 
-        {/* Sekcja RabbitMQ */}
+        {/* select RabbitMQ */}
         <div className="bg-white p-6 rounded-lg shadow-2xl h-full max-h-[80vh] overflow-y-auto">
           <MessageListRabbitmq />
         </div>

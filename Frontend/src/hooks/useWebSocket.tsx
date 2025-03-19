@@ -12,24 +12,24 @@ const useWebSocket = () => {
     const ws = new WebSocket("ws://localhost:8080");
 
     ws.onopen = () => {
-      console.log("🟢 Połączono z WebSocket");
+      console.log("🟢 Connected to WebSocket");
 
     };
 
     ws.onmessage = (e) => {
       const data = JSON.parse(e.data);
-      console.log("📩 Otrzymano wiadomość:", data);
+      console.log("📩 Message received:", data);
 
      
 
-      // 🛠️ Sprawdzenie, czy wiadomość już istnieje (zapobiega duplikatom)
+      // 🛠️ Check if the message already exists (prevents duplicates)
       setMessages((prev) =>
         prev.some((msg) => msg.message === data.message) ? prev : [data, ...prev]
       );
     };
 
     ws.onclose = () => {
-      console.warn("❌ Połączenie WebSocket zamknięte. Próba ponownego połączenia...");
+      console.warn("❌ WebSocket connection closed. Attempting to reconnect...");
       setTimeout(() => useWebSocket(), 3000);
     };
 

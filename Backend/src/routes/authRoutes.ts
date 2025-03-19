@@ -12,25 +12,20 @@ const router = express.Router();
 const SECRET_KEY = process.env.SECRET_KEY as string;
 
 
-/*if (!SECRET_KEY) {
-  throw new Error("SECRET_KEY nie jest ustawiony w pliku .env");
-}; */
-
-
 
 // Rate Limiter
 const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minut
   max: 100,
-  message: "Za dużo prób logowania, spróbuj ponownie później.",
+  message: "Too many login attempts, please try again later.",
 });
 
 
 
-// ✅ Obsługa logowania
+// ✅ Login handling
 router.post('/login', loginLimiter, [
-  body('email').isEmail().withMessage("Nieprawidłowy format email."),
-  body('password').isLength({ min: 6 }).withMessage("Hasło musi mieć co najmniej 6 znaków."),
+  body('email').isEmail().withMessage("Invalid email format."),
+  body('password').isLength({ min: 6 }).withMessage("Password must be at least 6 characters long."),
 ], async (req: Request, res: Response) => {
 
  
@@ -48,14 +43,14 @@ router.post('/login', loginLimiter, [
     const user = await User.findOne({ email });
 
     if (!user) {
-       res.status(401).json({ error: "Nieprawidłowy email lub hasło." });
+       res.status(401).json({ error: "Invalid email or password." });
        return;
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
-       res.status(401).json({ error: "Nieprawidłowy email lub hasło." });
+       res.status(401).json({ error: "Invalid email or password." });
     }
 
     const token = jwt.sign({ userId: user._id, email: user.email }, SECRET_KEY, { expiresIn: "2h" });
@@ -64,7 +59,7 @@ router.post('/login', loginLimiter, [
 
   } catch (error) {
     console.error(error);
-     res.status(500).json({ error: "Błąd serwera." });
+     res.status(500).json({ error: "Server error." });
   }
 });
 

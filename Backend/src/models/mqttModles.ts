@@ -9,7 +9,7 @@ interface IMqtt extends Document {
   qos?: number;
   retain?: boolean;
   received?: boolean;
-  isRead?: boolean; // pole do oznaczania, czy wiadomość została przeczytana
+  isRead?: boolean; 
 }
 
 const MqttSchema = new Schema<IMqtt>(
@@ -49,7 +49,7 @@ const MqttSchema = new Schema<IMqtt>(
     },
     isRead: {
       type: Boolean,
-      default: false, // domyślnie wiadomość jest nieprzeczytana
+      default: false,
     },
   },
   {
